@@ -43,7 +43,7 @@ public class User {
     private String nickName;    //닉네임
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String email;       //email
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
