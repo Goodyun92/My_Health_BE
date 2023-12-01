@@ -40,7 +40,7 @@ public class User {
     private String password;
 
     @Column(nullable = false, unique = true)
-    private String nickName;
+    private String nickName;    //닉네임
 
     @Column(nullable = false, unique = true)
     private String email;
