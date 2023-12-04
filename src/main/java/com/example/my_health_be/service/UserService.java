@@ -3,14 +3,13 @@ package com.example.my_health_be.service;
 import com.example.my_health_be.domain.user.User;
 import com.example.my_health_be.dto.user.UserJoinRequest;
 import com.example.my_health_be.exception.AppException;
-import com.example.my_health_be.exception.ErrorCode;
+import com.example.my_health_be.domain.enums.ErrorCode;
 import com.example.my_health_be.repository.UserRepository;
 import com.example.my_health_be.security.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 
 import static com.example.my_health_be.domain.enums.Role.ROLE_USER;
@@ -33,7 +32,6 @@ public class UserService {
         String userName = dto.getUserName();
         String password = dto.getPassword();
         String nickName = dto.getNickName();
-        String email = dto.getEmail();
 
         // userName 중복 check
         userRepository.findByUserName(userName)
@@ -49,19 +47,11 @@ public class UserService {
                         }
                 );
 
-        // email 중복 check
-        userRepository.findByEmail(email)
-                .ifPresent(user -> {
-                            throw new AppException(ErrorCode.EMAIL_DUPLICATED, email + "는 이미 존재합니다.");
-                        }
-                );
-
         // 저장
         User user = User.builder()
                 .userName(userName)
                 .password(encoder.encode(password))
                 .nickName(nickName)
-                .email(email)
                 .role(ROLE_USER)
                 .build();
         userRepository.save(user);
@@ -107,7 +97,7 @@ public class UserService {
 
     public String getAccessToken(String userName){
 //        Long accessExpireTimeMs = 1000 * 60 * 60L;
-        Long accessExpireTimeMs = 1000 *60 * 60 *24 *30L;  //한달로 설정 시연 위해서
+        Long accessExpireTimeMs = 1000 *60 * 60 *24 *30L;  //한달로 설정 임시
 //        Long accessExpireTimeMs = 1000 * 60 * 1L;   //test
 
         User selectedUser = userRepository.findByUserName(userName)

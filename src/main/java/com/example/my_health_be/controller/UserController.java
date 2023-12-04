@@ -6,14 +6,13 @@ import com.example.my_health_be.dto.user.UserJoinRequest;
 import com.example.my_health_be.dto.user.UserLoginRequest;
 import com.example.my_health_be.dto.user.UserTokenReturnDto;
 import com.example.my_health_be.exception.AppException;
-import com.example.my_health_be.exception.ErrorCode;
+import com.example.my_health_be.domain.enums.ErrorCode;
 import com.example.my_health_be.repository.UserRepository;
 import com.example.my_health_be.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -62,13 +61,8 @@ public class UserController {
 
     @PutMapping("/updateNickName")
     public ReturnDto<User> updateNickName(@RequestParam String nickName, Authentication authentication) {
-
         // 현재 userName
         String userName = authentication.getName();
-
-
-//        CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
-//        Long Id = userDetails.getId(); // 사용자 ID 추출
 
         User user = userService.updateUserName(userName, nickName);
 
@@ -80,8 +74,6 @@ public class UserController {
         //userName 추출
         String userName = authentication.getName();
 
-//        CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
-//        Long Id = userDetails.getId(); // 사용자 ID 추출
         User user = userRepository.findByUserName(userName).orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND, "사용자" + userName + "이 없습니다."));
         return ReturnDto.ok(user);
     }

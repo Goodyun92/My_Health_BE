@@ -1,6 +1,6 @@
 package com.example.my_health_be.dto.common;
 
-import com.example.my_health_be.domain.enums.Code;
+import com.example.my_health_be.domain.enums.ReturnCode;
 import lombok.Data;
 
 @Data
@@ -11,14 +11,14 @@ public class ReturnDto<T> {
     private final T data;
 
     public static <T> ReturnDto<T> ok(T data) {
-        return new ReturnDto<>(Code.OK.getCode(), Code.OK.getHttpStatus(), Code.OK.getMessage(), data);
+        return new ReturnDto<>(ReturnCode.OK.getCode(), ReturnCode.OK.getHttpStatus(), ReturnCode.OK.getMessage(), data);
     }
 
     public static ReturnDto<Void> ok() {
-        return new ReturnDto<>(Code.OK.getCode(), Code.OK.getHttpStatus(), Code.OK.getMessage(), null);
+        return new ReturnDto<>(ReturnCode.OK.getCode(), ReturnCode.OK.getHttpStatus(), ReturnCode.OK.getMessage(), null);
     }
 
-    public static ReturnDto<?> fail(Code code) {
-        return new ReturnDto<>(code.getCode(), code.getHttpStatus(), code.getMessage(), null);
+    public static ReturnDto<?> fail() {
+        return new ReturnDto<>(ReturnCode.BAD_REQUEST.getCode(), ReturnCode.BAD_REQUEST.getHttpStatus(), ReturnCode.BAD_REQUEST.getMessage(), null);
     }
 }
