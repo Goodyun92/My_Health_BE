@@ -1,5 +1,6 @@
 package com.example.my_health_be.exception;
 
+import com.example.my_health_be.domain.enums.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

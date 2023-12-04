@@ -1,7 +1,7 @@
 package com.example.my_health_be.util;
 
 import com.example.my_health_be.exception.AppException;
-import com.example.my_health_be.exception.ErrorCode;
+import com.example.my_health_be.domain.enums.ErrorCode;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;

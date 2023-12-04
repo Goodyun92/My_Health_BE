@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .antMatchers("/**").hasAuthority("ROLE_ADMIN") // 'ADMIN' 역할을 가진 사용자에게 모든 경로에 대한 접근 허용
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //jwt사용하는 경우 씀
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //jwt사용
                 .and()
                 .addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtExceptionFilter, JwtTokenFilter.class) // JwtExceptionFilter 추가
