@@ -1,9 +1,15 @@
 package com.example.my_health_be.service;
 
+import com.example.my_health_be.domain.user.Inbody;
 import com.example.my_health_be.domain.user.User;
+import com.example.my_health_be.domain.user.UserProfile;
+import com.example.my_health_be.dto.user.UserInbodyRequest;
 import com.example.my_health_be.dto.user.UserJoinRequest;
+import com.example.my_health_be.dto.user.UserProfileRequest;
 import com.example.my_health_be.exception.AppException;
 import com.example.my_health_be.domain.enums.ErrorCode;
+import com.example.my_health_be.repository.InbodyRepository;
+import com.example.my_health_be.repository.UserProfileRepository;
 import com.example.my_health_be.repository.UserRepository;
 import com.example.my_health_be.security.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +25,8 @@ import static com.example.my_health_be.domain.enums.Role.ROLE_USER;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final InbodyRepository inbodyRepository;
+    private final UserProfileRepository userProfileRepository;
     private final BCryptPasswordEncoder encoder;
 
     @Value("${jwt.token.secret}")
@@ -47,7 +55,7 @@ public class UserService {
                         }
                 );
 
-        // 저장
+        // 유저 저장
         User user = User.builder()
                 .userName(userName)
                 .password(encoder.encode(password))
@@ -55,6 +63,18 @@ public class UserService {
                 .role(ROLE_USER)
                 .build();
         userRepository.save(user);
+
+        // 인바디 생성
+        Inbody inbody = Inbody.builder()
+                .user(user)
+                .build();
+        inbodyRepository.save(inbody);
+
+        // 프로필 생성
+        UserProfile userProfile = UserProfile.builder()
+                .user(user)
+                .build();
+        userProfileRepository.save(userProfile);
 
         return "SUCCESS";
     }
@@ -93,6 +113,37 @@ public class UserService {
         user.setNickName(nickName);
         userRepository.save(user);
         return user;
+    }
+
+    public UserProfile updateProfile(String userName, UserProfileRequest dto){
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, "사용자"+ userName + "이 없습니다."));
+
+        UserProfile userProfile = userProfileRepository.findByUser(user)
+                .orElseThrow(() -> new AppException(ErrorCode.PROFILE_NOT_FOUND, "사용자"+ userName + "의 프로필을 찾을 수 없습니다."));
+
+        userProfile.setBirth(dto.getBirth());
+        userProfile.setGender(dto.getGender());
+        userProfile.setWeight(dto.getWeight());
+        userProfile.setHeight(dto.getHeight());
+
+        userProfileRepository.save(userProfile);
+        return userProfile;
+    }
+
+    public Inbody updateInbody(String userName, UserInbodyRequest dto){
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, "사용자"+ userName + "이 없습니다."));
+
+        Inbody inbody = inbodyRepository.findByUser(user)
+                .orElseThrow(() -> new AppException(ErrorCode.INBODY_NOT_FOUND, "사용자"+ userName + "의 인바디를 찾을 수 없습니다."));
+
+        inbody.setBmi(dto.getBmi());
+        inbody.setSkeletalMuscle(dto.getSkeletalMuscle());
+        inbody.setFatPer(dto.getFatPer());
+
+        inbodyRepository.save(inbody);
+        return inbody;
     }
 
     public String getAccessToken(String userName){
