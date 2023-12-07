@@ -16,20 +16,17 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-//        try {
-//            filterChain.doFilter(request, response);
-//        } catch (ExpiredJwtException e) {
-//            // JWT 만료 예외 처리
-//            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//            response.getWriter().write("Expired JWT token");
-//        }
-//        catch (Exception e) {
-//            // 다른 JWT 관련 예외 처리
-//            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-//            response.getWriter().write("Internal Server Error");
-//        }
 
         try {
+
+            String path = request.getRequestURI();
+
+            // 회원가입, 로그인, 토큰 갱신 요청에 대해 토큰 필터를 적용하지 않음
+            if (path.startsWith("/api/users/join") || path.startsWith("/api/users/login") || path.startsWith("/api/users/refresh")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             String jwtToken = request.getHeader("Authorization"); // 토큰 헤더 조회
 
             if (jwtToken == null || jwtToken.isEmpty()) {
