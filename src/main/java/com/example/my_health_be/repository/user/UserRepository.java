@@ -1,8 +1,7 @@
-package com.example.my_health_be.repository;
+package com.example.my_health_be.repository.user;
 
 import com.example.my_health_be.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 
 import java.util.Optional;
 
