@@ -1,4 +1,4 @@
-package com.example.my_health_be.repository;
+package com.example.my_health_be.repository.user;
 
 import com.example.my_health_be.domain.user.User;
 import com.example.my_health_be.domain.user.UserProfile;

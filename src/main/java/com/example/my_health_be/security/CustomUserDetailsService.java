@@ -1,7 +1,7 @@
 package com.example.my_health_be.security;
 
 import com.example.my_health_be.domain.user.User;
-import com.example.my_health_be.repository.UserRepository;
+import com.example.my_health_be.repository.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
