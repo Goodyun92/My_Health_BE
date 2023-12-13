@@ -26,7 +26,6 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "users")
 public class User {
     @Id
@@ -41,9 +40,6 @@ public class User {
 
     @Column(nullable = false, unique = true)
     private String nickName;    //닉네임
-
-    @Column(nullable = false, unique = true)
-    private String email;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

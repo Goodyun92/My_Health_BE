@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Code {
+public enum ReturnCode {
 
     OK(200, "OK", "요청에 성공하였습니다."),
     BAD_REQUEST(400, "Bad Request", "잘못된 요청입니다."),
