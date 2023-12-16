@@ -6,7 +6,6 @@ import com.example.my_health_be.domain.intake.DailyIntake;
 import com.example.my_health_be.domain.intake.TaskIntake;
 import com.example.my_health_be.domain.user.User;
 import com.example.my_health_be.domain.user.UserProfile;
-import com.example.my_health_be.dto.intake.DailyIntakeRequestDto;
 import com.example.my_health_be.dto.intake.DailyIntakeReturnDto;
 import com.example.my_health_be.dto.intake.TaskIntakeRequestDto;
 import com.example.my_health_be.dto.intake.TaskIntakeReturnDto;
@@ -37,12 +36,12 @@ public class IntakeService {
     private final TaskIntakeRepository taskIntakeRepository;
 
     @Transactional
-    public DailyIntakeReturnDto getDailyIntake (DailyIntakeRequestDto dto, String userName){
+    public DailyIntakeReturnDto getDailyIntake (LocalDate date, String userName){
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, "사용자"+ userName + "이 없습니다."));
 
         // 사용자 ID와 날짜로 검색
-        Optional<DailyIntake> dailyIntakeOpt = dailyIntakeRepository.findByUserAndDate(user,dto.getDate());
+        Optional<DailyIntake> dailyIntakeOpt = dailyIntakeRepository.findByUserAndDate(user,date);
 
         // 존재하면 반환, 없으면 새로 생성
         DailyIntake dailyIntake = dailyIntakeOpt.orElseGet(() -> {
@@ -67,7 +66,7 @@ public class IntakeService {
 
             DailyIntake newDailyIntake = DailyIntake.builder()
                     .user(user)
-                    .date(dto.getDate())
+                    .date(date)
                     .targetCalorie(targetCalorie)
                     .currentCalorie(0.0)
                     .build();
