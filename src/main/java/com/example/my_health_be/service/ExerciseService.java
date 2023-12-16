@@ -7,7 +7,6 @@ import com.example.my_health_be.domain.user.User;
 import com.example.my_health_be.domain.user.UserProfile;
 import com.example.my_health_be.dto.exercise.DailyExerciseReturnDto;
 import com.example.my_health_be.dto.exercise.TaskExerciseRequestDto;
-import com.example.my_health_be.dto.exercise.DailyExerciseRequestDto;
 import com.example.my_health_be.dto.exercise.TaskExerciseReturnDto;
 import com.example.my_health_be.exception.AppException;
 import com.example.my_health_be.repository.exercise.DailyExerciseRepository;
@@ -18,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,13 +34,13 @@ public class ExerciseService {
     private final TaskExerciseRepository taskExerciseRepository;
 
     @Transactional
-    public DailyExerciseReturnDto getDailyExercise(DailyExerciseRequestDto dto, String userName){
+    public DailyExerciseReturnDto getDailyExercise(LocalDate date, String userName){
 
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, "사용자"+ userName + "이 없습니다."));
 
         // 사용자 ID와 날짜로 검색
-        Optional<DailyExercise> dailyExerciseOpt = dailyExerciseRepository.findByUserAndDate(user, dto.getDate());
+        Optional<DailyExercise> dailyExerciseOpt = dailyExerciseRepository.findByUserAndDate(user, date);
 
         // 존재하면 반환, 없으면 새로 생성
         DailyExercise dailyExercise = dailyExerciseOpt.orElseGet(() -> {
@@ -51,7 +51,7 @@ public class ExerciseService {
 
             DailyExercise newDailyExercise = DailyExercise.builder()
                     .user(user)
-                    .date(dto.getDate())
+                    .date(date)
                     .targetCalorie(targetCalorie)
                     .currentCalorie(0.0)
                     .build();

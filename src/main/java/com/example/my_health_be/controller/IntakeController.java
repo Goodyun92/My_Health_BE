@@ -1,13 +1,15 @@
 package com.example.my_health_be.controller;
 
 import com.example.my_health_be.dto.common.ReturnDto;
-import com.example.my_health_be.dto.intake.DailyIntakeRequestDto;
 import com.example.my_health_be.dto.intake.DailyIntakeReturnDto;
 import com.example.my_health_be.dto.intake.TaskIntakeRequestDto;
 import com.example.my_health_be.service.IntakeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,10 +19,10 @@ public class IntakeController {
     private final IntakeService intakeService;
 
     @GetMapping("/daily")
-    public ReturnDto<DailyIntakeReturnDto> getDailyIntake(@RequestBody DailyIntakeRequestDto dto, Authentication authentication){
+    public ReturnDto<DailyIntakeReturnDto> getDailyIntake(@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, Authentication authentication){
         String userName = authentication.getName();
 
-        DailyIntakeReturnDto dailyIntakeReturnDto = intakeService.getDailyIntake(dto, userName);
+        DailyIntakeReturnDto dailyIntakeReturnDto = intakeService.getDailyIntake(date, userName);
 
         return ReturnDto.ok(dailyIntakeReturnDto);
     }
